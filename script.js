@@ -1,177 +1,80 @@
-const API_BASE = 'https://jsonplaceholder.typicode.com';
-const USER_ID = 1; // Фиксированный userId для наших задач
+const amountInput = document.getElementById('amount');
+const fromSelect = document.getElementById('from');
+const toSelect = document.getElementById('to');
+const resultDiv = document.getElementById('result');
+const rateDiv = document.getElementById('rate');
+const swapBtn = document.getElementById('swap');
+const convertBtn = document.getElementById('convert');
 
-const taskInput = document.getElementById('taskInput');
-const addBtn = document.getElementById('addBtn');
-const taskList = document.getElementById('taskList');
-const noTasks = document.getElementById('noTasks');
+let rates = {};
+const BASE_CURRENCY = 'EUR'; // Базовая валюта API
 
-const editModal = document.getElementById('editModal');
-const deleteAlert = document.getElementById('deleteAlert');
-const editInput = document.getElementById('editInput');
-const saveEdit = document.getElementById('saveEdit');
-const cancelEdit = document.getElementById('cancelEdit');
-const yesBtn = document.getElementById('yesBtn');
-const noBtn = document.getElementById('noBtn');
+// Надёжный бесплатный API без ключей (frankfurter.app)
+const API_URL = `https://api.frankfurter.app/latest?from=${BASE_CURRENCY}`;
 
-let tasks = []; // Массив задач из API
-let currentEditId = null;
-let currentDeleteId = null;
-
-// Загрузка задач из API
-async function loadTasks() {
+async function loadCurrencies() {
   try {
-    const response = await fetch(`${API_BASE}/todos?userId=${USER_ID}`);
-    const apiTasks = await response.json();
-    // Фильтруем только наши (userId=1), берём title как текст задачи
-    tasks = apiTasks.map(task => ({ id: task.id, text: task.title }));
-    renderTasks();
-  } catch (error) {
-    console.error('Ошибка загрузки:', error);
-    // Fallback на localStorage, если API не работает
-    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    renderTasks();
-  }
-}
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('API не отвечает');
+    const data = await res.json();
+    
+    rates = data.rates;
+    const currencies = Object.keys(rates);
 
-// Сохранение в localStorage (fallback)
-function saveToLocal() {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-// Рендер задач (как раньше)
-function renderTasks() {
-  taskList.innerHTML = '';
-  noTasks.style.display = tasks.length === 0 ? 'block' : 'none';
-
-  tasks.forEach(task => {
-    const li = document.createElement('li');
-    li.className = 'task-item';
-    li.innerHTML = `
-      <span class="task-text">${task.text}</span>
-      <div class="task-actions">
-        <button class="edit-btn">✏️</button>
-        <button class="delete-btn">✕</button>
-      </div>
-    `;
-
-    // Редактирование
-    li.querySelector('.edit-btn').addEventListener('click', () => {
-      currentEditId = task.id;
-      editInput.value = task.text;
-      editModal.style.display = 'flex';
+    // Заполняем селекты всеми доступными валютами (автоматически)
+    [fromSelect, toSelect].forEach(select => {
+      select.innerHTML = '';
+      currencies.sort().forEach(code => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = `${code}`;
+        select.appendChild(option);
+      });
     });
 
-    // Удаление
-    li.querySelector('.delete-btn').addEventListener('click', () => {
-      currentDeleteId = task.id;
-      deleteAlert.style.display = 'flex';
-    });
-
-    taskList.appendChild(li);
-  });
-}
-
-// Добавить задачу (POST)
-async function addTask(text) {
-  try {
-    // POST возвращает 201 с данными
-    const response = await fetch(`${API_BASE}/todos`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: USER_ID, title: text, completed: false })
-    });
-    const newTask = await response.json();
-    // Добавляем в локальный массив (id генерируется API)
-    tasks.push({ id: newTask.id, text: text });
-    renderTasks();
-  } catch (error) {
-    console.error('Ошибка добавления:', error);
-    // Fallback
-    const fallbackId = Date.now(); // Простой ID
-    tasks.push({ id: fallbackId, text });
-    saveToLocal();
-    renderTasks();
+    // По умолчанию: USD → EUR
+    fromSelect.value = 'USD';
+    toSelect.value = 'EUR';
+    
+    convertCurrency();
+  } catch (err) {
+    console.error(err);
+    resultDiv.textContent = 'Ошибка загрузки курсов';
+    rateDiv.textContent = 'Проверьте интернет или попробуйте позже';
   }
 }
 
-// Обновить задачу (PUT)
-async function updateTask(id, newText) {
-  try {
-    await fetch(`${API_BASE}/todos/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: USER_ID, title: newText, completed: false })
-    });
-    // Обновляем локально
-    const task = tasks.find(t => t.id === id);
-    if (task) task.text = newText;
-    renderTasks();
-  } catch (error) {
-    console.error('Ошибка обновления:', error);
-    // Fallback
-    const task = tasks.find(t => t.id === id);
-    if (task) task.text = newText;
-    saveToLocal();
-    renderTasks();
+function convertCurrency() {
+  const amount = parseFloat(amountInput.value) || 0;
+  const from = fromSelect.value;
+  const to = toSelect.value;
+
+  if (!rates[from] || !rates[to] || from === to) {
+    resultDiv.textContent = amount.toFixed(2);
+    rateDiv.textContent = 'Выберите разные валюты';
+    return;
   }
+
+  // Конвертация через базовую валюту
+  const result = amount * (rates[to] / rates[from]);
+
+  resultDiv.textContent = result.toFixed(2);
+  rateDiv.textContent = `1 ${from} = ${(rates[to] / rates[from]).toFixed(6)} ${to} (на ${new Date().toLocaleDateString('ru-RU')})`;
 }
 
-// Удалить задачу (DELETE)
-async function deleteTask(id) {
-  try {
-    await fetch(`${API_BASE}/todos/${id}`, { method: 'DELETE' });
-    // Удаляем локально
-    tasks = tasks.filter(t => t.id !== id);
-    renderTasks();
-  } catch (error) {
-    console.error('Ошибка удаления:', error);
-    // Fallback
-    tasks = tasks.filter(t => t.id !== id);
-    saveToLocal();
-    renderTasks();
-  }
-}
-
-// События (как раньше, но с API)
-addBtn.addEventListener('click', () => {
-  const text = taskInput.value.trim();
-  if (text) {
-    addTask(text);
-    taskInput.value = '';
-  }
+// Свап валют
+swapBtn.addEventListener('click', () => {
+  const temp = fromSelect.value;
+  fromSelect.value = toSelect.value;
+  toSelect.value = temp;
+  convertCurrency();
 });
 
-taskInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') addBtn.click();
-});
+// События (автообновление при вводе)
+amountInput.addEventListener('input', convertCurrency);
+fromSelect.addEventListener('change', convertCurrency);
+toSelect.addEventListener('change', convertCurrency);
+convertBtn.addEventListener('click', convertCurrency);
 
-saveEdit.addEventListener('click', () => {
-  const text = editInput.value.trim();
-  if (text && currentEditId !== null) {
-    updateTask(currentEditId, text);
-  }
-  closeEdit();
-});
-
-cancelEdit.addEventListener('click', closeEdit);
-function closeEdit() {
-  editModal.style.display = 'none';
-  currentEditId = null;
-}
-
-yesBtn.addEventListener('click', () => {
-  if (currentDeleteId !== null) {
-    deleteTask(currentDeleteId);
-  }
-  deleteAlert.style.display = 'none';
-  currentDeleteId = null;
-});
-
-noBtn.addEventListener('click', () => {
-  deleteAlert.style.display = 'none';
-  currentDeleteId = null;
-});
-
-// Инициализация: загружаем из API
-loadTasks();
+// Запуск при загрузке страницы
+loadCurrencies();
