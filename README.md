@@ -3,16 +3,8 @@
 A simple, easy-to-use Currency Converter app for converting amounts between currencies using up-to-date exchange rates. This README contains a demo section, overview, features, installation and local run instructions, project structure, technologies used, design & inspiration placeholder, and author placeholder.
 
 ## Demo
-Live demo: [Add your demo URL here]
+Live demo: https://ayzsw.github.io/currency-converter/
 
-Screenshot / GIF:
-- Add a screenshot or animated GIF to show the app in action (e.g. `docs/screenshot.png`).
-
-Example quick usage (curl):
-```bash
-# Example request to a conversion endpoint (adjust URL and params according to your app)
-curl "http://localhost:3000/api/convert?from=USD&to=EUR&amount=100"
-```
 
 ## Overview
 Currency Converter provides a fast way to convert an amount from one currency to another using a reliable exchange rates provider. It is intended for both end-users (simple UI) and developers (API endpoint and modular architecture) who need accurate conversions in a compact app.
@@ -122,11 +114,13 @@ List of suggested / common technologies used for a currency converter app — up
 ## Design & Inspiration
 - Add design inspirations, mockups, or links here.
 - Example: Figma design link or Dribbble references.
-Design & Inspiration: [Add your design/inspiration links here]
+Design & Inspiration: 
+https://www.figma.com/design/xurpGe4gY00pO2xPUvYDRE/Currency-converter---Mobile-and-Web-Version--Community-?node-id=15-31&p=f&t=PPgO3eay7e4ybmS8-0
+https://1drv.ms/p/c/828fea46ba0ee2aa/IQBMq9MgNglER6zLtyRci9sCAb0xElzZV918W11V3Ffzxmg?e=VVV8zR
 
 ## Author
 Add your name and links (GitHub, website, email) here.
-Author: [Add your name and links here]
+Author: https://ayzsw.github.io/currency-converter/
 
 ## Contributing
 Contributions are welcome. Please open an issue or submit a pull request with a clear description of your changes and why they are needed.
