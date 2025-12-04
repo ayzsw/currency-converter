@@ -1,80 +1,164 @@
-const amountInput = document.getElementById('amount');
-const fromSelect = document.getElementById('from');
-const toSelect = document.getElementById('to');
-const resultDiv = document.getElementById('result');
-const rateDiv = document.getElementById('rate');
-const swapBtn = document.getElementById('swap');
-const convertBtn = document.getElementById('convert');
+const API_KEY = "7a7bfcc9f163bee6efcced2f";
+const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
 
-let rates = {};
-const BASE_CURRENCY = 'EUR'; // Базовая валюта API
+const fromContainer = document.getElementById("fromContainer");
+const toContainer = document.getElementById("toContainer");
+const fromCurrency = document.getElementById("fromCurrency");
+const toCurrency = document.getElementById("toCurrency");
+const fromAmount = document.getElementById("fromAmount");
+const toAmount = document.getElementById("toAmount");
+const rateText = document.getElementById("rateText");
+const swap = document.getElementById("swap");
+const keypad = document.querySelectorAll(".keypad button");
+const offlineMessage = document.getElementById("offlineMessage");
 
-// Надёжный бесплатный API без ключей (frankfurter.app)
-const API_URL = `https://api.frankfurter.app/latest?from=${BASE_CURRENCY}`;
+// Объект для сопоставления кода валюты с кодом страны для эмодзи-флага
+function getCountryCode(currencyCode) {
+    const codes = {
+        USD: 'US', EUR: 'EU', GBP: 'GB', JPY: 'JP', AUD: 'AU', CAD: 'CA',
+        CHF: 'CH', CNH: 'CN', SEK: 'SE', NZD: 'NZ', MXN: 'MX', SGD: 'SG',
+        HKD: 'HK', NOK: 'NO', KRW: 'KR', TRY: 'TR', INR: 'IN', RUB: 'RU',
+        BRL: 'BR', ZAR: 'ZA', PLN: 'PL', PHP: 'PH', TWD: 'TW', THB: 'TH',
+        MYR: 'MY', IDR: 'ID', CZK: 'CZ', AED: 'AE', COP: 'CO', HUF: 'HU',
+        ILS: 'IL', QAR: 'QA', DKK: 'DK', KZT: 'KZ', PKR: 'PK', SAR: 'SA',
+        VND: 'VN', CLP: 'CL', IQD: 'IQ', UAH: 'UA', EGP: 'EG', KWD: 'KW',
+        MAD: 'MA', OMR: 'OM', RSD: 'RS', AZN: 'AZ', AFN: 'AF', ALL: 'AL',
+        DZD: 'DZ', AOA: 'AO', ARS: 'AR', AMD: 'AM', AWG: 'AW', BHD: 'BH',
+        BGN: 'BG', BZD: 'BZ', BMD: 'BM', BOB: 'BO', BWP: 'BW', BYN: 'BY',
+        CDF: 'CD', CRC: 'CR', CUP: 'CU', DOP: 'DO', DZD: 'DZ', FJD: 'FJ',
+        GEL: 'GE', GHS: 'GH', GTQ: 'GT', HNL: 'HN', HTG: 'HT', IRR: 'IR',
+        JMD: 'JM', JOD: 'JO', KES: 'KE', KGS: 'KG', KHR: 'KH', LBP: 'LB',
+        LKR: 'LK', LYD: 'LY', MDL: 'MD', MKD: 'MK', MNT: 'MN', MOP: 'MO',
+        MVR: 'MV', MWK: 'MW', NAD: 'NA', NGN: 'NG', NIO: 'NI', NPR: 'NP',
+        PAB: 'PA', PEN: 'PE', PYG: 'PY', RON: 'RO', RWF: 'RW', SDD: 'SD',
+        SLL: 'SL', SOS: 'SO', SRD: 'SR', SYP: 'SY', TJS: 'TJ', TMT: 'TM',
+        TTD: 'TT', UYU: 'UY', UZS: 'UZ', VEF: 'VE', XAF: 'CM', XCD: 'AG',
+        XOF: 'SN', YER: 'YE', ZMW: 'ZM',
+        // Добавьте больше кодов по мере необходимости
+    };
+    return codes[currencyCode] || '';
+}
+
+function getFlagEmoji(countryCode) {
+    if (!countryCode) return '🌐';
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+}
+
+function updateFlag(container, currencyCode) {
+    const countryCode = getCountryCode(currencyCode);
+    const emoji = getFlagEmoji(countryCode);
+    container.querySelector('.flag').textContent = emoji;
+}
 
 async function loadCurrencies() {
-  try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error('API не отвечает');
-    const data = await res.json();
-    
-    rates = data.rates;
-    const currencies = Object.keys(rates);
+    try {
+        const res = await fetch(`${BASE_URL}/latest/USD`);
+        const data = await res.json();
 
-    // Заполняем селекты всеми доступными валютами (автоматически)
-    [fromSelect, toSelect].forEach(select => {
-      select.innerHTML = '';
-      currencies.sort().forEach(code => {
-        const option = document.createElement('option');
-        option.value = code;
-        option.textContent = `${code}`;
-        select.appendChild(option);
-      });
-    });
+        if (data.result === "error") {
+            throw new Error(data["error-type"]);
+        }
 
-    // По умолчанию: USD → EUR
-    fromSelect.value = 'USD';
-    toSelect.value = 'EUR';
-    
-    convertCurrency();
-  } catch (err) {
-    console.error(err);
-    resultDiv.textContent = 'Ошибка загрузки курсов';
-    rateDiv.textContent = 'Проверьте интернет или попробуйте позже';
-  }
+        const currencies = Object.keys(data.conversion_rates);
+
+        currencies.forEach(c => {
+            const option = `<option>${c}</option>`;
+            fromCurrency.innerHTML += option;
+            toCurrency.innerHTML += option;
+        });
+
+        fromCurrency.value = "USD";
+        toCurrency.value = "EUR";
+        offlineMessage.style.display = 'none';
+
+        updateFlag(fromContainer, fromCurrency.value);
+        updateFlag(toContainer, toCurrency.value);
+
+        convert();
+    } catch (error) {
+        console.error("Ошибка при загрузке валют:", error);
+        rateText.textContent = "Ошибка: не удалось получить список валют. Проверьте API Key.";
+        offlineMessage.style.display = 'block';
+    }
 }
 
-function convertCurrency() {
-  const amount = parseFloat(amountInput.value) || 0;
-  const from = fromSelect.value;
-  const to = toSelect.value;
+async function convert() {
+    const amount = parseFloat(fromAmount.value) || 0;
+    
+    const url = `${BASE_URL}/pair/${fromCurrency.value}/${toCurrency.value}/${amount}`;
+    
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
 
-  if (!rates[from] || !rates[to] || from === to) {
-    resultDiv.textContent = amount.toFixed(2);
-    rateDiv.textContent = 'Выберите разные валюты';
-    return;
-  }
+        if (data.result === "error") {
+            throw new Error(data["error-type"]);
+        }
 
-  // Конвертация через базовую валюту
-  const result = amount * (rates[to] / rates[from]);
+        const convertedAmount = data.conversion_result;
+        const rate = data.conversion_rate;
 
-  resultDiv.textContent = result.toFixed(2);
-  rateDiv.textContent = `1 ${from} = ${(rates[to] / rates[from]).toFixed(6)} ${to} (на ${new Date().toLocaleDateString('ru-RU')})`;
+        toAmount.value = convertedAmount.toFixed(2);
+        rateText.textContent = `1 ${fromCurrency.value} = ${rate.toFixed(4)} ${toCurrency.value}`;
+        offlineMessage.style.display = 'none';
+    } catch (error) {
+        console.error("Ошибка при конвертации:", error);
+        toAmount.value = "----";
+        rateText.textContent = `Ошибка конвертации. ${error.message}`;
+        offlineMessage.style.display = 'block';
+    }
 }
 
-// Свап валют
-swapBtn.addEventListener('click', () => {
-  const temp = fromSelect.value;
-  fromSelect.value = toSelect.value;
-  toSelect.value = temp;
-  convertCurrency();
+fromCurrency.addEventListener("change", () => {
+    updateFlag(fromContainer, fromCurrency.value);
+    convert();
+});
+toCurrency.addEventListener("change", () => {
+    updateFlag(toContainer, toCurrency.value);
+    convert();
+});
+fromAmount.addEventListener("input", convert);
+
+swap.addEventListener("click", () => {
+    let t = fromCurrency.value;
+    fromCurrency.value = toCurrency.value;
+    toCurrency.value = t;
+
+    updateFlag(fromContainer, fromCurrency.value);
+    updateFlag(toContainer, toCurrency.value);
+
+    convert();
 });
 
-// События (автообновление при вводе)
-amountInput.addEventListener('input', convertCurrency);
-fromSelect.addEventListener('change', convertCurrency);
-toSelect.addEventListener('change', convertCurrency);
-convertBtn.addEventListener('click', convertCurrency);
+keypad.forEach(btn => {
+    btn.addEventListener("click", () => {
+        let key = btn.getAttribute("data-key");
+        let currentValue = fromAmount.value;
 
-// Запуск при загрузке страницы
+        if (key === "del") {
+            fromAmount.value = currentValue.slice(0, -1);
+        } else if (key === ".") {
+            if (!currentValue.includes('.')) {
+                fromAmount.value += key;
+            }
+        } 
+        else if (currentValue === "0" && key !== "0") {
+            fromAmount.value = key;
+        }
+        else {
+            fromAmount.value += key;
+        }
+        
+        if (fromAmount.value === "") {
+            fromAmount.value = "0";
+        }
+
+        convert();
+    });
+});
+
 loadCurrencies();
