@@ -1,42 +1,62 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Currency Converter</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="alatoo_logo.jpg.png">
 </head>
 <body>
-  <div class="container">
+
+<div class="container">
+    <h1>Currency Converter</h1>
+    <p class="subtitle">Check live rates, set rate alerts, receive notifications and more.</p>
+
     <div class="card">
-      <h1>Currency Converter</h1>
-      <p class="subtitle">Актуальные курсы валют в реальном времени</p>
+        <label>Amount</label>
 
-      <div class="input-group">
-        <label>Сумма</label>
-        <input type="number" id="amount" value="1" min="0">
-      </div>
-
-      <div class="row">
-        <div class="input-group">
-          <label>Из</label>
-          <select id="from"></select>
+        <div class="row">
+            <div class="select-container" id="fromContainer">
+                <span class="flag"></span>
+                <select id="fromCurrency"></select>
+            </div>
+            <input type="number" id="fromAmount" value="1000">
         </div>
-        <div class="swap" id="swap">↔</div>
-        <div class="input-group">
-          <label>В</label>
-          <select id="to"></select>
+
+        <div id="swap" class="swap">⇅</div>
+
+        <label>Converted Amount</label>
+
+        <div class="row">
+            <div class="select-container" id="toContainer">
+                <span class="flag"></span>
+                <select id="toCurrency"></select>
+            </div>
+            <input type="text" id="toAmount" readonly>
         </div>
-      </div>
 
-      <div class="result" id="result">0.00</div>
-      <p class="rate" id="rate"></p>
-
-      <button class="convert-btn" id="convert">Конвертировать</button>
+        <p id="rateText" class="rate-text"></p>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <div class="keypad">
+        <button data-key="1">1</button>
+        <button data-key="2">2</button>
+        <button data-key="3">3</button>
+        <button data-key="4">4</button>
+        <button data-key="5">5</button>
+        <button data-key="6">6</button>
+        <button data-key="7">7</button>
+        <button data-key="8">8</button>
+        <button data-key="9">9</button>
+        <button data-key=".">.</button>
+        <button data-key="0">0</button>
+        <button data-key="del">⌫</button>
+    </div>
+
+    <p id="offlineMessage" class="offline" style="display: none;">Offline: using fallback rates</p>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
