@@ -12,7 +12,6 @@ const swap = document.getElementById("swap");
 const keypad = document.querySelectorAll(".keypad button");
 const offlineMessage = document.getElementById("offlineMessage");
 
-// Объект для сопоставления кода валюты с кодом страны для эмодзи-флага
 function getCountryCode(currencyCode) {
     const codes = {
         USD: 'US', EUR: 'EU', GBP: 'GB', JPY: 'JP', AUD: 'AU', CAD: 'CA',
@@ -34,7 +33,6 @@ function getCountryCode(currencyCode) {
         SLL: 'SL', SOS: 'SO', SRD: 'SR', SYP: 'SY', TJS: 'TJ', TMT: 'TM',
         TTD: 'TT', UYU: 'UY', UZS: 'UZ', VEF: 'VE', XAF: 'CM', XCD: 'AG',
         XOF: 'SN', YER: 'YE', ZMW: 'ZM',
-        // Добавьте больше кодов по мере необходимости
     };
     return codes[currencyCode] || '';
 }
@@ -71,8 +69,8 @@ async function loadCurrencies() {
             toCurrency.innerHTML += option;
         });
 
-        fromCurrency.value = "USD";
-        toCurrency.value = "EUR";
+        fromCurrency.value = "SGD";
+        toCurrency.value = "USD";
         offlineMessage.style.display = 'none';
 
         updateFlag(fromContainer, fromCurrency.value);
@@ -87,7 +85,8 @@ async function loadCurrencies() {
 }
 
 async function convert() {
-    const amount = parseFloat(fromAmount.value) || 0;
+    // Используем Number(value) для корректной обработки "1000.00"
+    const amount = Number(fromAmount.value) || 0;
     
     const url = `${BASE_URL}/pair/${fromCurrency.value}/${toCurrency.value}/${amount}`;
     
@@ -121,7 +120,9 @@ toCurrency.addEventListener("change", () => {
     updateFlag(toContainer, toCurrency.value);
     convert();
 });
-fromAmount.addEventListener("input", convert);
+
+// Убираем слушатель "input" для fromAmount, так как ввод будет только через клавиатуру
+// fromAmount.addEventListener("input", convert);
 
 swap.addEventListener("click", () => {
     let t = fromCurrency.value;
@@ -140,19 +141,24 @@ keypad.forEach(btn => {
         let currentValue = fromAmount.value;
 
         if (key === "del") {
+            // Удаляем символ, но оставляем "0.00", если строка пуста
             fromAmount.value = currentValue.slice(0, -1);
         } else if (key === ".") {
+            // Разрешаем ввод точки, только если ее еще нет
             if (!currentValue.includes('.')) {
                 fromAmount.value += key;
             }
         } 
-        else if (currentValue === "0" && key !== "0") {
-            fromAmount.value = key;
-        }
         else {
-            fromAmount.value += key;
+            // Удаляем незначащий "0" перед вводом новой цифры
+            if (currentValue === "0" || currentValue === "0.00" || currentValue === "") {
+                fromAmount.value = key;
+            } else {
+                fromAmount.value += key;
+            }
         }
         
+        // Гарантируем, что поле не остается пустым
         if (fromAmount.value === "") {
             fromAmount.value = "0";
         }
