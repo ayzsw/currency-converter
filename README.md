@@ -115,7 +115,7 @@ List of suggested / common technologies used for a currency converter app — up
 - Add design inspirations, mockups, or links here.
 - Example: Figma design link or Dribbble references.
 Design & Inspiration: 
-https://www.figma.com/design/xurpGe4gY00pO2xPUvYDRE/Currency-converter---Mobile-and-Web-Version--Community-?node-id=15-31&p=f&t=PPgO3eay7e4ybmS8-0
+[https://www.figma.com/design/xurpGe4gY00pO2xPUvYDRE/Currency-converter---Mobile-and-Web-Version--Community-?node-id=15-31&p=f&t=PPgO3eay7e4ybmS8-0](https://www.figma.com/community/file/1215141639571590423)
 https://1drv.ms/p/c/828fea46ba0ee2aa/IQBMq9MgNglER6zLtyRci9sCAb0xElzZV918W11V3Ffzxmg?e=VVV8zR
 
 ## Author
