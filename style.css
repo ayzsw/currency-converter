@@ -1,250 +1,143 @@
-body {
+* {
     margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: #F1F3F8;
-    display: flex;
-    justify-content: center;
     padding: 0;
-    min-height: 100vh;
-}
-
-.container {
-    width: 375px; /* Ширина по Figma */
-    max-width: 100%;
-    text-align: center;
-    background: #FFF;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 0;
-}
-
-h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1F2261;
-    margin-top: 40px;
-    margin-bottom: 5px;
-}
-
-.subtitle {
-    font-size: 13px;
-    color: #6F7386;
-    font-weight: 400;
-    padding: 0 40px;
-}
-
-.card {
-    background: #FFF;
-    padding: 24px;
-    border-radius: 12px;
-    margin: 20px 24px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    text-align: left;
-}
-
-label {
-    font-size: 14px;
-    color: #98A0B2;
-    display: block;
-    text-align: left;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-.row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.select-container {
-    flex-basis: 120px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    padding: 12px 10px;
-    border-radius: 10px;
-    border: 1px solid #DCDCDC;
-    background-color: #F8F8F8;
-    height: 48px;
     box-sizing: border-box;
 }
 
-.flag {
-    font-size: 20px;
-    margin-right: 8px;
-    line-height: 1;
+body {
+    background: #ffffff; /* Белый фон */
+    color: #333; 
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-select {
-    flex-grow: 1;
-    padding: 0;
-    border: none;
-    font-size: 16px;
-    font-weight: 600;
-    color: #1F2261;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: transparent;
-    cursor: pointer;
+.converter-app {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
 }
 
-input {
-    flex: 1;
-    padding: 12px 0;
-    border: none;
+.title {
     font-size: 24px;
-    font-weight: 700;
-    color: #1F2261;
-    text-align: right;
-    background: transparent;
-    outline: none;
+    color: #1a1a2e; 
+    margin-bottom: 10px;
 }
 
-#toAmount {
-    color: #4B3DF6;
+.subtitle {
+    font-size: 14px;
+    color: #666; 
+    margin-bottom: 40px;
 }
 
-.swap {
-    background: #4B3DF6;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 18px;
-    margin: -10px auto 30px auto;
+.converter-box {
+    background: #f0f0f5; 
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-section {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.input-section label {
+    display: block;
+    font-size: 14px;
+    color: #666; 
+    margin-bottom: 5px;
+}
+
+.input-group {
+    display: flex;
+    background: #ffffff; 
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    overflow: hidden;
+    height: 50px;
+}
+
+/* Контейнер для флага и SELECT */
+.currency-picker {
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(75, 61, 246, 0.4);
+    border-right: 1px solid #ddd; 
+    padding: 0 5px;
 }
 
-.exchange-rate-title {
-    font-size: 12px;
-    color: #98A0B2;
-    margin-bottom: 4px;
-    font-weight: 500;
+.flag-icon {
+    font-size: 20px; 
+    line-height: 1; 
+    margin-right: 5px;
 }
 
-.rate-text {
-    text-align: left;
+.currency-select {
+    background: transparent;
+    color: #1a1a2e; 
+    border: none;
+    padding: 0 5px; 
     font-size: 16px;
-    font-weight: 600;
-    color: #1F2261;
-    margin-top: 0;
-}
-
-/* --- Keypad Styles --- */
-.keypad-wrapper {
-    background: #FFF;
-    padding: 16px 24px;
-    margin-top: auto;
-    border-top: 1px solid #EAEAEA;
-    flex-shrink: 0; /* Гарантирует, что клавиатура не уменьшается */
-}
-
-.keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    max-width: 327px;
-    margin: 0 auto;
-}
-
-.keypad button {
-    padding: 18px 0;
-    font-size: 24px;
-    font-weight: 500;
-    border-radius: 12px;
-    border: 0;
-    background: #F8F8F8;
-    color: #1F2261;
-    box-shadow: none;
+    font-weight: bold;
+    appearance: none;
     cursor: pointer;
-    transition: background 0.1s;
+    flex-shrink: 0;
 }
 
-.keypad button:active {
-    background: #EAEAEA;
+.input-group input {
+    background: transparent;
+    color: #1a1a2e; 
+    border: none;
+    outline: none;
+    padding: 0 15px;
+    font-size: 18px;
+    flex-grow: 1;
+    text-align: right;
 }
 
-.keypad button[data-key="."]:not(:hover),
-.keypad button[data-key="del"]:not(:hover) {
-    color: #98A0B2;
+.input-group input[readonly] {
+    color: #999;
+    background: #f0f0f5; 
+}
+
+/* Кнопка обмена (Swap) */
+.swap-button-container {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    z-index: 10;
+}
+
+.swap-button {
+    background: #1a1a2e; 
+    color: #ffffff;     
+    border: 2px solid #f0f0f5; 
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     font-size: 20px;
-    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s;
+    font-weight: bold; 
 }
 
-.keypad button[data-key="del"] svg {
-    width: 20px;
-    height: 20px;
-    color: #98A0B2;
-    transform: rotate(45deg);
+.swap-button:hover {
+    background: #3f51b5; 
 }
 
-.offline-message {
-    margin-top: 10px;
-    color: #777;
-    font-size: 13px;
-    text-align: center;
-    padding-bottom: 20px;
-}
-
-/* --- Адаптивность для узких экранов (Меньше 375px) --- */
-@media (max-width: 374px) {
-    .container {
-        /* Убираем фиксированную ширину, используем всю доступную ширину */
-        width: 100%;
-        box-shadow: none;
-    }
-
-    .card {
-        margin: 20px 16px; /* Уменьшаем горизонтальные отступы */
-        padding: 16px;
-    }
-    
-    .select-container {
-        flex-basis: 100px; /* Немного уменьшаем ширину поля валюты */
-    }
-
-    .keypad-wrapper {
-        padding: 16px;
-    }
-
-    .keypad {
-        gap: 8px; /* Уменьшаем расстояние между кнопками */
-    }
-
-    .keypad button {
-        font-size: 20px;
-        padding: 15px 0;
-    }
-}
-
-/* --- Адаптивность для больших экранов (Планшеты/Десктоп) --- */
-@media (min-width: 600px) {
-    .container {
-        /* Ограничиваем максимальную ширину для центрирования контента */
-        max-width: 400px;
-        min-height: auto;
-        border-radius: 12px;
-        margin: 40px auto;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    }
-    
-    body {
-        /* Добавляем фон для области вокруг контейнера */
-        background: #E9ECF3; 
-        padding: 40px;
-    }
-
-    .keypad-wrapper {
-        /* На десктопе клавиатура может быть частью контейнера */
-        border-bottom-left-radius: 12px;
-        border-bottom-right-radius: 12px;
-    }
+/* Индикативный курс */
+.rate-info {
+    text-align: left; /* ИСПРАВЛЕНО: Выравнивание по левому краю */
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a2e; 
+    padding: 10px 0;
 }
