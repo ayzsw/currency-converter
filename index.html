@@ -1,68 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency Converter</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="alatoo_logo.jpg.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
-    <h1>Currency Converter</h1>
+<div class="converter-app">
+    <h1 class="title">Currency Converter</h1>
     <p class="subtitle">Check live rates, set rate alerts, receive notifications and more.</p>
 
-    <div class="card">
-        <label>Amount</label>
-
-        <div class="row">
-            <div class="select-container" id="fromContainer">
-                <span class="flag"></span>
-                <select id="fromCurrency"></select>
+    <div class="converter-box">
+        
+        <div class="input-section">
+            <label for="amountInput">Amount</label>
+            <div class="input-group">
+                <div class="currency-picker"> 
+                    <span id="fromFlag" class="flag-icon">🇸🇬</span> 
+                    <select id="fromCurrency" class="currency-select">
+                        </select>
+                </div>
+                <input type="number" id="amountInput" value="1000.00" min="0">
             </div>
-            <input type="text" id="fromAmount" value="1000.00" inputmode="none" readonly>
         </div>
 
-        <div id="swap" class="swap">⇅</div>
-
-        <label class="converted-label">Converted Amount</label>
-
-        <div class="row">
-            <div class="select-container" id="toContainer">
-                <span class="flag"></span>
-                <select id="toCurrency"></select>
-            </div>
-            <input type="text" id="toAmount" value="736.70" readonly>
+        <div class="swap-button-container">
+            <button id="swapBtn" class="swap-button">⇅</button>
         </div>
-
-        <p class="exchange-rate-title">Indicative Exchange Rate</p>
-        <p id="rateText" class="rate-text">1 SGD = 0.7367 USD</p>
-    </div>
-    
-    <div class="keypad-wrapper">
-        <div class="keypad">
-            <button data-key="1">1</button>
-            <button data-key="2">2</button>
-            <button data-key="3">3</button>
-            <button data-key="4">4</button>
-            <button data-key="5">5</button>
-            <button data-key="6">6</button>
-            <button data-key="7">7</button>
-            <button data-key="8">8</button>
-            <button data-key="9">9</button>
-            <button data-key=".">. . .</button>
-            <button data-key="0">0</button>
-            <button data-key="del">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19.0113 5.43265L17.5971 4L12.0042 9.593L6.41129 4L4.99712 5.43265L10.5901 11.0257L4.99712 16.6186L6.41129 18.0513L12.0042 12.4583L17.5971 18.0513L19.0113 16.6186L13.4183 11.0257L19.0113 5.43265Z" fill="currentColor"/>
-                </svg>
-            </button>
+        
+        <div class="input-section">
+            <label for="convertedAmount">Converted Amount</label>
+            <div class="input-group">
+                <div class="currency-picker">
+                    <span id="toFlag" class="flag-icon">🇺🇸</span> 
+                    <select id="toCurrency" class="currency-select">
+                        </select>
+                </div>
+                <input type="text" id="convertedAmount" value="736.70" readonly>
+            </div>
         </div>
     </div>
+
+    <div class="rate-info">
+        <p id="exchangeRate">1 SGD = 0.7367 USD</p>
+    </div>
     
-    <p id="offlineMessage" class="offline-message" style="display: none;">Offline: using fallback rates</p>
 </div>
 
 <script src="script.js"></script>
