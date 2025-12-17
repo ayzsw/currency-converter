@@ -2,150 +2,160 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background: #ffffff; 
-    color: #333; 
-    font-family: Arial, sans-serif;
+    background: #f4f7fe; /* Светлый фон как в макете */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
 .converter-app {
     width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    /* Убедимся, что приложение не занимает больше, чем нужно */
-    margin: 0 auto; 
+    max-width: 420px;
+    text-align: center;
 }
 
 .title {
-    font-size: 24px;
-    color: #1a1a2e; 
+    font-size: 28px;
+    color: #1f2261; /* Темно-синий из макета */
     margin-bottom: 10px;
+    font-weight: 800;
 }
 
 .subtitle {
     font-size: 14px;
-    color: #666; 
-    margin-bottom: 40px;
+    color: #808080;
+    margin-bottom: 35px;
+    line-height: 1.5;
 }
 
 .converter-box {
-    background: #f0f0f5; 
-    padding: 20px 15px; /* Уменьшим паддинг для мобильных */
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    background: #ffffff;
+    padding: 30px 20px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .input-section {
     text-align: left;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .input-section label {
     display: block;
-    font-size: 14px;
-    color: #666; 
-    margin-bottom: 5px;
+    font-size: 13px;
+    color: #a0a0a0;
+    margin-bottom: 8px;
+    padding-left: 5px;
 }
 
 .input-group {
     display: flex;
-    background: #ffffff; 
-    border: 1px solid #ddd; 
-    border-radius: 8px;
-    overflow: hidden;
-    height: 50px;
-    /* ВАЖНО: Убеждаемся, что input-group занимает 100% ширины */
-    width: 100%; 
+    align-items: center;
+    gap: 10px;
 }
 
-/* Контейнер для флага и SELECT */
 .currency-picker {
     display: flex;
     align-items: center;
-    border-right: 1px solid #ddd; 
-    padding: 0 5px;
-    /* Ограничиваем ширину контейнера выбора валюты, чтобы дать больше места полю ввода */
-    max-width: 120px; 
-    flex-shrink: 0; /* Не сжимать при недостатке места */
+    gap: 8px;
+    position: relative;
+    padding-right: 15px;
+}
+
+/* Иконка стрелочки выбора валюты */
+.currency-picker::after {
+    content: '▼';
+    font-size: 8px;
+    color: #a0a0a0;
+    position: absolute;
+    right: 0;
+    pointer-events: none;
 }
 
 .flag-icon {
-    font-size: 20px; 
-    line-height: 1; 
-    margin-right: 5px;
+    font-size: 32px; /* Крупные флаги */
+    background: #f0f0f0;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .currency-select {
     background: transparent;
-    color: #1a1a2e; 
+    color: #1f2261;
     border: none;
-    padding: 0 5px; 
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 700;
     appearance: none;
     cursor: pointer;
-    flex-shrink: 0;
+    outline: none;
 }
 
 .input-group input {
-    background: transparent;
-    color: #1a1a2e; 
+    background: #f0f2f8;
+    color: #1f2261;
     border: none;
     outline: none;
-    padding: 0 10px; /* Уменьшим паддинг для мобильных */
+    padding: 12px 15px;
     font-size: 18px;
+    font-weight: 700;
+    border-radius: 12px;
     flex-grow: 1;
     text-align: right;
-    /* ИСПРАВЛЕНИЕ АДАПТИВНОСТИ: Убедимся, что поле ввода не переполняет контейнер */
-    min-width: 0; 
+    min-width: 0; /* Чтобы не вылетало на мобилках */
 }
 
-.input-group input[readonly] {
-    color: #999;
-    background: #f0f0f5; 
-}
-
-/* Кнопка обмена (Swap) */
-.swap-button-container {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    z-index: 10;
+/* Линия-разделитель со стрелками */
+.swap-divider {
+    height: 1px;
+    background: #eeeeee;
+    margin: 35px 0;
+    position: relative;
 }
 
 .swap-button {
-    background: #1a1a2e; 
-    color: #ffffff;     
-    border: 2px solid #f0f0f5; 
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #1f2261;
+    color: #ffffff;
+    border: 5px solid #ffffff;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     font-size: 20px;
-    line-height: 1;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s;
-    font-weight: bold; 
+    box-shadow: 0 5px 15px rgba(31, 34, 97, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.swap-button:hover {
-    background: #3f51b5; 
-}
-
-/* Индикативный курс */
 .rate-info {
-    text-align: left; 
-    font-size: 16px;
-    font-weight: 500;
-    color: #1a1a2e; 
-    padding: 10px 0;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.rate-label {
+    color: #a0a0a0;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+#exchangeRate {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 700;
 }
