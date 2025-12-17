@@ -14,40 +14,37 @@
     <p class="subtitle">Check live rates, set rate alerts, receive notifications and more.</p>
 
     <div class="converter-box">
-        
         <div class="input-section">
-            <label for="amountInput">Amount</label>
+            <label>Amount</label>
             <div class="input-group">
                 <div class="currency-picker"> 
                     <span id="fromFlag" class="flag-icon">🇸🇬</span> 
-                    <select id="fromCurrency" class="currency-select">
-                        </select>
+                    <select id="fromCurrency" class="currency-select"></select>
                 </div>
-                <input type="number" id="amountInput" value="1000.00" min="0">
+                <input type="number" id="amountInput" value="1000.00">
             </div>
         </div>
 
-        <div class="swap-button-container">
+        <div class="swap-divider">
             <button id="swapBtn" class="swap-button">⇅</button>
         </div>
         
         <div class="input-section">
-            <label for="convertedAmount">Converted Amount</label>
+            <label>Converted Amount</label>
             <div class="input-group">
                 <div class="currency-picker">
                     <span id="toFlag" class="flag-icon">🇺🇸</span> 
-                    <select id="toCurrency" class="currency-select">
-                        </select>
+                    <select id="toCurrency" class="currency-select"></select>
                 </div>
-                <input type="text" id="convertedAmount" value="736.70" readonly>
+                <input type="text" id="convertedAmount" readonly>
             </div>
         </div>
     </div>
 
     <div class="rate-info">
-        <p id="exchangeRate">1 SGD = 0.7367 USD</p>
+        <p class="rate-label">Indicative Exchange Rate</p>
+        <h2 id="exchangeRate">1 SGD = 0.7367 USD</h2>
     </div>
-    
 </div>
 
 <script src="script.js"></script>
